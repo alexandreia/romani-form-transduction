@@ -9,7 +9,7 @@ A research project on sample-to-sample form prediction, data exposure, and param
 Language Technology MSc · Research & Development · Uppsala University  
 **Andreia Alexa**
 
-[Study design](#study-design) · [Pipeline](#pipeline) · [Quick start](#quick-start) · [Evaluation](#evaluation) · [Project status](#project-status)
+[Study design](#study-design) · [Pipeline](#pipeline) · [Evaluation](#evaluation) · [Project status](#project-status)
 
 </div>
 
