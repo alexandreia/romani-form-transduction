@@ -113,7 +113,7 @@ Preparation retains raw exports and applies reviewed corrections in a separate l
 | Development | **521** | **33** |
 | Test | **526** | **32** |
 
-Counts reflect the reviewed data as of 28 October 2026. They can change after further approved corrections. Items recur across pairs and slots, so **rows are not independent observations**.
+Items recur across pairs and slots, so **rows are not independent observations**.
 
 ### What the overlap checks enforce
 
@@ -126,61 +126,6 @@ All mappings for an item remain in the same partition. The audit checks train/de
 When training content duplicates a holdout example, the existing policy excludes the whole conflicting training item across the selected directions. A dev/test content conflict stops the run. **All three boundaries currently pass after exclusions.**
 
 Shared substrings and productive patterns can still occur across partitions. This protocol tests held-out items; it does not establish unseen-lemma or unseen-transformation generalization. Test references are inspected for the structural audit, but the current runners do not produce final-test predictions or scores.
-
-## Quick start
-
-### Install
-
-From the project root, for a first-time environment setup:
-
-```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-```
-
-For optional neural experiments:
-
-```bash
-.venv/bin/python -m pip install -r requirements-neural.txt
-```
-
-The preparation pipeline expects locally obtained RMS CSV exports and sample metadata. Raw exports and generated datasets are kept out of the code repository; this is not yet a released data package. Redistribution permissions must be established before publishing RMS-derived data.
-
-### Run baselines
-
-On macOS, double-click these files in the project folder:
-
-| Launcher | Action |
-|---|---|
-| `validate_experiment.command` | Validate the final population and overlap checks |
-| `run_baselines.command` | Run independent per-pair dev baselines and generate a report |
-| `report_experiment.command` | Report the latest completed final-experiment baseline run |
-
-Or use Terminal:
-
-```bash
-.venv/bin/python src/models/adapter_protocol.py \
-  --config protocols/three_pair_baselines.json
-
-.venv/bin/python src/baselines/compare_pairs.py \
-  --experiment-config protocols/three_pair_baselines.json \
-  --output reports/runs/three_pairs_dev_01
-```
-
-Use a **new output folder** for each run. The runner protects existing results.
-
-### Inspect the neural plan
-
-```bash
-.venv/bin/python src/models/pilot_adapters.py \
-  --config protocols/three_pair_lora.json \
-  --dry-run --full-dev \
-  --output reports/runs/three_pair_plan
-```
-
-This validates the selection and displays all four fits without training. The pilot also supports a local CPU smoke test and a representative CUDA timing run; see the [full command guide](docs/GROUP_LORA_GUIDE.md).
-
-Neural loading uses the pinned checkpoint from the local cache by default. Downloads require explicit `--allow-download`. A CPU smoke test verifies correctness, not convergence or GPU feasibility. The planned production experiment has **four fits per seed and three seeds: 12 fits**; that full training schedule is not implemented yet.
 
 ## Evaluation
 
@@ -236,36 +181,6 @@ This is the **baseline** layout. Neural pilot runs instead contain one directory
 | Production training and early stopping | Pending |
 | Multi-seed neural results and final-test inference | Pending |
 
-Three annotation cases remain pending (`S602`, `S604`, `S612`), alongside 35 records without decisions. The test set contains only 32 elicitation items, limiting the precision and breadth of final claims. Results remain provisional until preparation and evaluation choices are settled.
-
-Earlier configurations, reports, and retired code are preserved for provenance. They are not the active experiment. Start with the files below rather than historical runner defaults.
-
-## Project map
-
-```text
-protocols/                    Explicit experiment configurations
-src/data/                     Normalization, review import, canonical forms, alignment
-src/baselines/                Copy, lookup, rewriting, and per-pair runner
-src/models/                   Audited data loading and LoRA feasibility pilot
-src/evaluation/               Metrics, reports, and statistical utilities
-scripts/                      Review import, token lengths, and GPU job helpers
-tests/                        Active regression tests
-docs/                         Guides, methodology, and review records
-CURRENT_EXPERIMENT.md          Authoritative scope and population
-PROPOSAL_REFINEMENT.md         Dated discussion and decision history
-```
-
-Some data, reports, documentation, and archive material are local research files and may not accompany a public code checkout.
-
-**Read next:** [experiment specification](CURRENT_EXPERIMENT.md) · [commands](docs/GROUP_LORA_GUIDE.md) · [annotation review](docs/data_audit/paradigm_review_2026-10-27.md) · [approved corrections](docs/data_audit/approved_note_fixes_2026-10-28.md)
-
-### Tests
-
-```bash
-.venv/bin/python -m pytest tests/ -q
-```
-
-Use the active `tests/` directory; archived tests describe superseded workflows.
 
 ## References
 
